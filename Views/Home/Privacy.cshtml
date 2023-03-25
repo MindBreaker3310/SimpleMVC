@@ -4,3 +4,12 @@
 <h1>@ViewData["Title"]</h1>
 
 <p>Use this page to detail your site's privacy policy.</p>
+
+
+@section Scripts{
+    @*加入這個頁面需要用到的額外js檔*@
+    @*此段程式碼會加入至_Layout.cshtml內最下方@RenderSection("Scripts", required: false)的部分*@
+    @*<script src="~/js/xxx.js"></script>*@
+    @*<script src="~/js/yyy.js"></script>*@
+}
+
