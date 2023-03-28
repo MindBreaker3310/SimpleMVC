@@ -27,6 +27,7 @@ namespace SimpleMVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +44,13 @@ namespace SimpleMVC
                 app.UseHsts();
             }
 
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+
+            app.UseRouting();
+
+            app.UseAuthorization();
 
             //建置自定義Middleware(使用匿名函數)
             app.Use(async (context, next) =>
@@ -53,31 +61,33 @@ namespace SimpleMVC
                 }
                 await next();
             });
-            //建置自定義Middleware(使用外部class)
+            //建置自定義Middleware(使用外部class)(兩種方法，擇一使用)
             app.UseMiddleware<MyMiddleware>();
+            app.UseMyMiddleware();
+
+
             //使用分支功能>如果url是/branch，多執行一些middleware
             app.Map("/branch", (branch) =>
             {
                 branch.Use(async (context, next) =>
                 {
-                    await context.Response.WriteAsync("branch middleware \n\r");
+                    await context.Response.WriteAsync("Branch Use \n\r");
+                    await next();
                 });
-                branch.UseMiddleware<MyMiddleware>();
+
+                //使用Run將不會跑到下一個middleware
+                branch.Run(async (context) =>
+                {
+                    await context.Response.WriteAsync("Branch Run \n\r");
+                });
             });
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-
-            app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async (context) =>
                 {
-                    await context.Response.WriteAsync("hello world!");
+                    await context.Response.WriteAsync("hello world!!");
                 });
 
                 endpoints.MapControllerRoute(

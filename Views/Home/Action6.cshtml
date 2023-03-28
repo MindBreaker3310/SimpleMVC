@@ -1,0 +1,19 @@
+﻿@model string
+
+@{
+    ViewData["Title"] = "Action 6";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>這裡是父頁面，下面將呈現三種插入ChildView的方法</p>
+<p>ChildView是放在Views/Home/Shared資料夾下的</p>
+
+<partial name="ChildView" />
+
+@await Html.PartialAsync("ChildView", Model)
+
+@{
+    await Html.RenderPartialAsync("ChildView");
+}
+
+<p>父頁面END</p>

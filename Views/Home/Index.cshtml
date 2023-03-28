@@ -3,6 +3,55 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">里程碑</h1>
+
+    <div class="card">
+        <h5 class="card-header">Section Script</h5>
+        <div class="card-body">
+            <p>
+                功用是只在這個頁面引入需要js檔<br>
+                在_layout.cshtml最下面RenderSection("Scripts", required: false)<br>
+                假如Privacy頁面需要使用到xxx.js檔案<br>
+                可以＠Section Script{}內引入xxx.js檔
+            </p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h5 class="card-header">Middleware的使用</h5>
+        <div class="card-body">
+            <ul list-style: none;>
+                <li><a href="/">No Middleware</a></li>
+                <li><a href="/?callmymiddleware=true">Call My Middleware</a></li>
+                <li><a href="/branch">Middleware Branch</a></li>
+                <li><a href="/branch?callmymiddleware=true">Call My Middleware Middleware Branch</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="card">
+        <h5 class="card-header">Controller的使用</h5>
+        <div class="card-body">
+            <ul list-style: none;>
+                <li><a href="@Url.Action("Action1", "Home")">回傳不同的View</a></li>
+                <li><a href="@Url.Action("Action2", "Home")">回傳string</a></li>
+                <li><a href="@Url.Action("Action3", "Home")">回傳Json</a></li>
+                <li><a href="@Url.Action("Action4", "Home")">回傳ViewModel與使用ViewBag</a></li>
+
+                <li>
+                    <form asp-controller="Home" asp-action="Action5" method="post">
+                        <label for="url">重新導向</label>
+                        <input name="url" type="text" />
+                        空值 -> 跳轉到google
+                        Action1 -> home/Action1
+                        完整url -> url
+                        <input type="submit" />
+                    </form>
+                </li>
+
+                <li><a href="@Url.Action("Action6", "Home")">回傳PartialView</a></li>
+
+            </ul>
+        </div>
+    </div>
+
 </div>

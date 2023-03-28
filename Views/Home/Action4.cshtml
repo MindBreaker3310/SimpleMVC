@@ -1,0 +1,16 @@
+﻿@model User
+
+@{
+    ViewData["Title"] = "Action 4";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>安安！ @ViewBag.greet 我來自ViewBag</p>
+<p>@ViewBag.item1 我來自ViewBag</p>
+<p>@ViewBag.item2 我來自ViewBag</p>
+<p>@ViewBag.item3 我來自QueryString -> ViewBag 請看url</p>
+
+<p>ID=@Model.UserId Name=@Model.Name -> 來自Model</p>
+
+
+<p>路由資訊->@ViewBag.RouteData</p>
