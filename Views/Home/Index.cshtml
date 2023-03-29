@@ -20,38 +20,49 @@
     <div class="card">
         <h5 class="card-header">Middleware的使用</h5>
         <div class="card-body">
-            <ul list-style: none;>
-                <li><a href="/">No Middleware</a></li>
-                <li><a href="/?callmymiddleware=true">Call My Middleware</a></li>
-                <li><a href="/branch">Middleware Branch</a></li>
-                <li><a href="/branch?callmymiddleware=true">Call My Middleware Middleware Branch</a></li>
-            </ul>
+            <div class="list-group">
+                <a class="list-group-item list-group-item-action" href="/">No Middleware</a>
+                <a class="list-group-item list-group-item-action" href="/?callmymiddleware=true">Call My Middleware</a>
+                <a class="list-group-item list-group-item-action" href="/branch">Middleware Branch</a>
+                <a class="list-group-item list-group-item-action" href="/branch?callmymiddleware=true">Call My Middleware Middleware Branch</a>
+            </div>
         </div>
     </div>
     <div class="card">
         <h5 class="card-header">Controller的使用</h5>
         <div class="card-body">
-            <ul list-style: none;>
-                <li><a href="@Url.Action("Action1", "Home")">回傳不同的View</a></li>
-                <li><a href="@Url.Action("Action2", "Home")">回傳string</a></li>
-                <li><a href="@Url.Action("Action3", "Home")">回傳Json</a></li>
-                <li><a href="@Url.Action("Action4", "Home")">回傳ViewModel與使用ViewBag</a></li>
+            <div class="list-group">
+                <a class="list-group-item list-group-item-action" href="@Url.Action("Action1", "Home")">回傳不同的View</a>
+                <a class="list-group-item list-group-item-action" href="@Url.Action("Action2", "Home")">回傳string</a>
+                <a class="list-group-item list-group-item-action" href="@Url.Action("Action3", "Home")">回傳Json</a>
+                <a class="list-group-item list-group-item-action" href="@Url.Action("Action4", "Home")">回傳ViewModel、ViewBag、ViewData、RouteData</a>
 
-                <li>
-                    <form asp-controller="Home" asp-action="Action5" method="post">
-                        <label for="url">重新導向</label>
-                        <input name="url" type="text" />
-                        空值 -> 跳轉到google
-                        Action1 -> home/Action1
-                        完整url -> url
-                        <input type="submit" />
-                    </form>
-                </li>
 
-                <li><a href="@Url.Action("Action6", "Home")">回傳PartialView</a></li>
+                <form asp-controller="Home" asp-action="Action5" method="post" class="list-group-item list-group-item-action">
+                    <label for="url">重新導向</label>
+                    <input name="url" type="text" />
+                    <input type="submit" />
+                </form>
 
-            </ul>
+
+                <a class="list-group-item list-group-item-action" href="@Url.Action("Action6", "Home")">回傳PartialView</a>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h5 class="card-header">狀態管理</h5>
+        <div class="card-body">
+            <div class="list-group">
+                <a class="list-group-item list-group-item-action" href="@Url.Action("UseTempData", "Home")">UseTempData</a>
+                <a class="list-group-item list-group-item-action" href="@Url.Action("UseCookie", "Home")">UseCookie</a>
+                <a class="list-group-item list-group-item-action" href="@Url.Action("UseSession", "Home")">UseSession</a>
+
+            </div>
         </div>
     </div>
 
 </div>
+
+

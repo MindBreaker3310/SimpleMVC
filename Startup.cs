@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,7 +28,25 @@ namespace SimpleMVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            //將TempData改使用Session儲存
+            //services.AddControllersWithViews().AddSessionStateTempDataProvider();
+            //services.AddSession();
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            //使用session
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.IsEssential = true;//可以從用cookie把session回復起來
+            });
+
+            //新增Views Shared資料夾範圍
+            services.Configure<RazorViewEngineOptions>(o =>
+            {
+                o.ViewLocationFormats.Add("~/Views/MyCustomShared/{0}" + RazorViewEngine.ViewExtension);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +70,8 @@ namespace SimpleMVC
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession();
 
             //建置自定義Middleware(使用匿名函數)
             app.Use(async (context, next) =>
@@ -81,6 +102,8 @@ namespace SimpleMVC
                     await context.Response.WriteAsync("Branch Run \n\r");
                 });
             });
+
+
 
 
             app.UseEndpoints(endpoints =>

@@ -13,10 +13,12 @@ namespace SimpleMVC.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public IActionResult Index()
@@ -30,6 +32,7 @@ namespace SimpleMVC.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        #region Controller的使用
 
         public IActionResult Action1()
         {
@@ -51,18 +54,24 @@ namespace SimpleMVC.Controllers
             int hours = DateTime.Now.Hour;
             string greet = hours < 12 ? "上午好!" : "下午好!";
 
-
+            //使用ViewBag
             ViewBag.greet = greet;
             ViewBag.item1 = "鉛筆盒";
             ViewBag.item2 = "水壺";
             ViewBag.item3 = Message;
 
+            //使用ViewData
+            ViewData["item4"] = "鑰匙";
+            ViewData["item5"] = "手機";
+
+            //使用ViewModel -> 一個頁面只有一個
             User user = new User
             {
                 UserId = "A123456789",
                 Name = "Max"
             };
 
+            //讀取RouteData
             var controller = RouteData.Values["Controller"];
             var action = RouteData.Values["Action"];
             var id = RouteData.Values["Id"];
@@ -93,5 +102,46 @@ namespace SimpleMVC.Controllers
             string viewModel = "PartialView";
             return PartialView("Action6", viewModel);
         }
+        #endregion
+
+        #region 狀態管理
+        public IActionResult UseTempData()
+        {
+            if (TempData["MyTempData"] == null)
+            {
+                TempData.Add("MyTempData", "[我是使用TempData儲存的資料]");
+            }
+            return View("StateManagement");
+        }
+
+        public IActionResult UseCookie()
+        {
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete("MyCookie");
+
+            CookieOptions options = new CookieOptions()
+            {
+                Expires = DateTime.Now.AddMinutes(7)
+            };
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("MyCookie", "[我是使用Cookie儲存的資料]");
+            return View("StateManagement");
+        }
+
+        public IActionResult UseSession()
+        {
+            _httpContextAccessor.HttpContext.Session.Clear();
+            _httpContextAccessor.HttpContext.Session.Remove("MySession");
+            _httpContextAccessor.HttpContext.Session.SetString("MySession", "[我是使用Session儲存的資料]");
+            var sessionId = _httpContextAccessor.HttpContext.Session.Id;
+
+            return View("StateManagement");
+        }
+        #endregion
+
+        #region 自動產生與Tag Helper
+        public IActionResult CreateProduct()
+        {
+            return View();
+        }
+        #endregion
     }
 }

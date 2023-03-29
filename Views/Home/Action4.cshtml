@@ -5,12 +5,32 @@
 }
 <h1>@ViewData["Title"]</h1>
 
-<p>安安！ @ViewBag.greet 我來自ViewBag</p>
-<p>@ViewBag.item1 我來自ViewBag</p>
-<p>@ViewBag.item2 我來自ViewBag</p>
-<p>@ViewBag.item3 我來自QueryString -> ViewBag 請看url</p>
+<div class="card">
+    <h5 class="card-header">ViewBag</h5>
+    <div class="card-body">
+        <p>安安！ @ViewBag.greet 我來自ViewBag</p>
+        <p>@ViewBag.item1 我來自ViewBag</p>
+        <p>@ViewBag.item2 我來自ViewBag</p>
+        <p>@ViewBag.item3 我來自QueryString -> ViewBag 請看url</p>
+        <p>路由資訊->@ViewBag.RouteData</p>
+    </div>
+</div>
 
-<p>ID=@Model.UserId Name=@Model.Name -> 來自Model</p>
+
+<div class="card">
+    <h5 class="card-header">ViewData</h5>
+    <div class="card-body">
+        <p>@ViewData["item4"] 我來自ViewData</p>
+        <p>@ViewData["item5"] 我來自ViewData</p>
+    </div>
+</div>
+
+<div class="card">
+    <h5 class="card-header">Cookie</h5>
+    <div class="card-body">
+        <p>ID=@Model.UserId Name=@Model.Name -> 來自Model</p>
+    </div>
+</div>
 
 
-<p>路由資訊->@ViewBag.RouteData</p>
+

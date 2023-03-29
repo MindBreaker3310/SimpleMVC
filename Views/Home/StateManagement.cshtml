@@ -1,0 +1,70 @@
+﻿@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "State Management";
+}
+<h1>@ViewData["Title"]</h1>
+
+<div class="card">
+    <h5 class="card-header">TempData</h5>
+    <div class="card-body">
+        <p>TempData預設為使用Cookie來儲存，可經設定改使用Session</p>
+
+
+        <h6>我的TempData：@TempData["MyTempData"]</h6>
+
+        <p>當直接使用＠TempData["MyTempData"]讀取後</p>
+        <p>會標記已讀取，並在最後將其刪除</p>
+
+        <p>使用Peek與Keep可以不標記讀取的同時取值，將其保留。</p>
+
+        <h6>Peek用法</h6>
+        @{
+            if (TempData.Peek("MyTempData") != null)
+            {
+                <p>我Peek的TempData:@TempData.Peek("MyTempData");</p>
+            }
+        }
+
+        <h6>Keep用法</h6>
+
+        @{
+            if (TempData["MyTempData"] != null)
+            {
+                <p>我Keep的TempData:@TempData["MyTempData"];</p>
+            }
+            TempData.Keep("MyTempData");
+        }
+
+    </div>
+</div>
+
+
+<div class="card">
+    <h5 class="card-header">將TempData改使用Session儲存</h5>
+    <div class="card-body">
+        <h6>1.先在services內加入</h6>
+        <p>services.AddControllersWithViews().AddSessionStateTempDataProvider();</p>
+        <p>services.AddSession();</p>
+        <h6>2.在Pipeline內加入</h6>
+        <p>app.UseSession();</p>
+        <p>需要在UseRouting之後，UseEndpoints之前</p>
+        <h6>使用TempData但是此時的資料是使用Session來儲存的</h6>
+    </div>
+</div>
+
+<div class="card">
+    <h5 class="card-header">使用HttpContext設定Cookie</h5>
+    <div class="card-body">
+        <p>我的Cookie -> @HttpContextAccessor.HttpContext.Request.Cookies["MyCookie"]</p>
+    </div>
+</div>
+
+<div class="card">
+    <h5 class="card-header">使用HttpContext設定Session</h5>
+    <div class="card-body">
+        <p>SessionId @ViewBag.SessionId</p>
+        <p>我的Session -> @HttpContextAccessor.HttpContext.Session.GetString("MySession")</p>
+    </div>
+</div>
