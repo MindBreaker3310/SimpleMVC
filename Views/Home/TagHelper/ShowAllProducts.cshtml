@@ -1,0 +1,114 @@
+﻿@model IEnumerable<Product>
+
+@{
+    ViewData["Title"] = "Show All Products";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table">
+    <thead>
+        <tr mytag>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitInStock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Discount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LaunchDate)
+            </th>
+            <th>
+                操作
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(x => item.ProductId)
+                </td>
+                <td>
+                    @Html.DisplayFor(x => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(x => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(x => item.UnitInStock)
+                </td>
+                <td>
+                    @Html.DisplayFor(x => item.Cost)
+                </td>
+                <td>
+                    @Html.DisplayFor(x => item.Discount)
+                </td>
+                <td>
+                    @Html.DisplayFor(x => item.LaunchDate)
+                </td>
+                <td>
+                    <a asp-controller="Home" asp-action="ProductDetail" asp-route-id="@item.ProductId" class="btn btn-info">Detail</a>
+                    <a asp-controller="Home" asp-action="ProductEdit" asp-route-id="@item.ProductId" class="btn btn-warning">Edit</a>
+                    <a asp-controller="Home" asp-action="ProductDelete" asp-route-id="@item.ProductId" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+
+</table>
+<div class="form-group">
+    <a href="@Url.Action("ProductCreate", "Home")" class="btn btn-success">Create</a>
+</div>
+<p>編輯或新增商品會進行資料格式驗證，其中使用到系統內建的之外，也有用了自定義的驗證</p>
+<p>分別有Model Level的MyCustomModelValidationAttribute與property Level的MyCustomPropertyValidationAttribute</p>
+<p>使用各種asp-的tag helper，很讚的</p>
+<br />
+<br />
+<br />
+<p>thead下的tr標籤會是藍底白字是因為加上了mytag標籤，MyTagHelper會為此標籤添加藍底白字的class屬性</p>
+<p>tbody下的tr標籤會是黑底白字是因為使用的TrTagHelper，覆寫了Process增加了，黑底白字的class屬性</p>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<a name="bookmark">書籤位置(可以使用asp-fragment快速到達)</a>

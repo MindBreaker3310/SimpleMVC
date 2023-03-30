@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SimpleMVC.Middlewares;
+using SimpleMVC.Models;
 
 namespace SimpleMVC
 {
@@ -46,7 +47,12 @@ namespace SimpleMVC
             services.Configure<RazorViewEngineOptions>(o =>
             {
                 o.ViewLocationFormats.Add("~/Views/MyCustomShared/{0}" + RazorViewEngine.ViewExtension);
+                o.ViewLocationFormats.Add("~/Views/Home/TagHelper/{0}" + RazorViewEngine.ViewExtension);
             });
+
+
+            //測試資料
+            services.AddSingleton<ProductsData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

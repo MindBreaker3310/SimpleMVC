@@ -7,9 +7,15 @@
   <ItemGroup>
     <None Remove="Middlewares\" />
     <None Remove="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" />
+    <None Remove="TagHelpers\" />
+    <None Remove="Views\Home\TagHelper\" />
+    <None Remove="Validations\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Middlewares\" />
+    <Folder Include="TagHelpers\" />
+    <Folder Include="Views\Home\TagHelper\" />
+    <Folder Include="Validations\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />

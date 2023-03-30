@@ -1,0 +1,27 @@
+﻿
+
+@{
+    ViewData["Title"] = "Use Form Tag Helper Attributes";
+}
+
+<h1>@ViewData["Title"]</h1>
+<br />
+
+<h3><a asp-controller="Home" asp-action="ShowAllProducts">Show All Product</a></h3>
+<p>使用&lt;a asp-controller="Home" asp-action="ShowAllProducts"&gt;</p>
+<br />
+
+
+<h3><a asp-route="ShowAll">Show All Product</a></h3>
+<p>使用&lt;a asp-route="ShowAll"&gt;</p>
+<br />
+
+
+<h3><a asp-controller="Home" asp-action="ShowAllProducts" asp-fragment="bookmark">Show All Product + 傳送至書籤</a></h3>
+<p>使用&lt;a asp-controller="Home" asp-action="ShowAllProducts" asp-fragment="bookmark"&gt;</p>
+<br />
+
+
+<h3><a asp-protocol="https" asp-host="microsoft.com" asp-controller="Home" asp-action="Index">Visit Bill Gates</a></h3>
+<p>使用&lt;a asp-protocol="https" asp-host="microsoft.com" asp-controller="Home" asp-action="Index"&gt;</p>
+<br />

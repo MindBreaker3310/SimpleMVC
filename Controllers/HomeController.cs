@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using SimpleMVC.Models;
 
 namespace SimpleMVC.Controllers
@@ -14,14 +17,21 @@ namespace SimpleMVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private ProductsData _data;
 
-        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor)
+        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor, ProductsData pData)
         {
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
+            _data = pData;
         }
 
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult Privacy()
         {
             return View();
         }
@@ -137,11 +147,72 @@ namespace SimpleMVC.Controllers
         }
         #endregion
 
-        #region 自動產生與Tag Helper
-        public IActionResult CreateProduct()
+        #region Tag Helper & Tag Helper Attributes
+        public IActionResult UseFormTagHelperAttributes()
         {
             return View();
         }
-        #endregion
+
+        [Route("Home/ShowAllProducts", Name = "ShowAll")]
+        public IActionResult ShowAllProducts()
+        {
+            return View(_data.Products);
+        }
+
+        public IActionResult ProductDetail(int id)
+        {
+            return View(_data.Products.FirstOrDefault(x => x.ProductId == id));
+        }
+
+        public IActionResult ProductCreate()
+        {
+            ViewBag.newId = _data.Products.Max(x => x.ProductId) + 1;
+            return View();
+        }
+
+        //預設是全部綁定，要只綁定ProductId,ProductName兩個參數，其他都不用的方法如下
+        //public IActionResult ProductCreate([Bind("ProductId,ProductName")]Product product)
+        [HttpPost]
+        public IActionResult ProductCreate(Product product)
+        {
+            //模型都符合data annotation
+            if (ModelState.IsValid)
+            {
+                _data.Add(product);
+                return Redirect("ShowAllProducts");
+            }
+            else
+            {
+                ViewBag.newId = _data.Products.Max(x => x.ProductId) + 1;
+                return View();
+            }
+        }
+
+        public IActionResult ProductEdit(int id)
+        {
+            return View(_data.Products.FirstOrDefault(x => x.ProductId == id));
+        }
+
+        [HttpPost]
+        public IActionResult ProductEdit(Product product)
+        {
+            //模型都符合data annotation
+            if (ModelState.IsValid)
+            {
+                _data.Update(product);
+                return View("ShowAllProducts", _data.Products);
+            }
+            return View(_data.Products.FirstOrDefault(x => x.ProductId == product.ProductId));
+        }
+
+        public IActionResult ProductDelete(int id)
+        {
+            _data.Delete(id);
+            return View("ShowAllProducts", _data.Products);
+        }
     }
+
+
+    #endregion
 }
+

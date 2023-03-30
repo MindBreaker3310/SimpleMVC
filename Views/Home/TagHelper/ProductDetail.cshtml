@@ -1,0 +1,66 @@
+﻿@model Product
+
+@{
+    ViewData["Title"] = "Product Detail";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ProductId)
+
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ProductId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ProductName)
+
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ProductName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Quantity)
+
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Quantity)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UnitInStock)
+
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UnitInStock)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cost)
+
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cost)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Discount)
+
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Discount)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LaunchDate)
+
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LaunchDate)
+        </dd>
+    </dl>
+</div>
+
+<a asp-action="ShowAllProducts" class="btn btn-secondary">返回至清單</a>
+<a asp-controller="Home" asp-action="ProductEdit" asp-route-id="@Model.ProductId" class="btn btn-warning">Edit</a>
+<a asp-controller="Home" asp-action="ProductDelete" asp-route-id="@Model.ProductId" class="btn btn-danger">Delete</a>
