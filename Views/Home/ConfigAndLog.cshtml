@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Config & Log";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<div class="card">
+    <h5 class="card-header">注入IConfiguration並直接使用</h5>
+    <div class="card-body">
+        <p>_configuration["Logging:LogLevel:Default"]; -> @ViewBag.LogInfo</p>
+    </div>
+</div>
+
+<div class="card">
+    <h5 class="card-header">注入IOptions並使用</h5>
+    <div class="card-body">
+        <p>使用option pattern -> 新增一個class MyConfigOptions，裡面參數與AppSettings內MyConfig下的參數一樣，然後包成服務如下</p>
+        <p>註冊DI: services.Configure< MyConfigOptions >(Configuration.GetSection("MyConfig"));</p>
+        <p>註入DI: IOptions< MyConfigOptions > options</p>
+        <p>_options.Value.MySetting1; -> @ViewBag.MySetting1</p>
+        <p>_options.Value.MySetting2; -> @ViewBag.MySetting2</p>
+        <p>_options.Value.MySetting3; -> @ViewBag.MySetting3</p>
+    </div>
+</div>
+
+<div class="card">
+    <h5 class="card-header">Log</h5>
+    <div class="card-body">
+        <p>在console中可以看到log喔，使用方法如下</p>
+        <br />
+        <p>_logger.LogTrace("我是Trace");</p>
+        <p>_logger.LogDebug("我是Debug");</p>
+        <p>
+            以上兩個需要在appsettings內的"Logging"下，加入"Console": {
+                "LogLevel": {
+                    "Default": "Trace"
+                }
+            }
+        </p>
+        <br />
+        <p>_logger.LogInformation("我是Information");</p>
+        <p>_logger.LogWarning("我是Warning");</p>
+        <p>_logger.LogError("我是Error");</p>
+        <p>_logger.LogCritical("我是Critical");</p>
+    </div>
+</div>
+
+

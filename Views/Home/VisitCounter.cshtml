@@ -1,0 +1,42 @@
+﻿@using SimpleMVC.Services;
+@inject ISingletonCounter ViewInjectSingletonCounter
+@inject IScopedCounter ViewInjectScopedCounter
+@inject ITransientCounter ViewInjectTransientCounter
+
+@{
+    ViewData["Title"] = "Visit Counter";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<div class="card">
+    <h5 class="card-header">Singleton</h5>
+    <div class="card-body">
+        <h6>每次呼叫都是共用同一個實例</h6>
+        <p>同請求第一次呼叫(在controller內注入)< Singleton Counter = @ViewBag.SingletonCount</p>
+        <p>同請求第二次呼叫(在View裡面注入) View Inject Singleton Counter = @ViewInjectSingletonCounter.GetCounter()</p>
+    </div>
+</div>
+
+<div class="card">
+    <h5 class="card-header">Scoped</h5>
+    <div class="card-body">
+        <h6>同一次呼叫是共用同一個實例</h6>
+        <p>同請求第一次呼叫(在controller內注入) Scoped Counter = @ViewBag.ScopedCount</p>
+        <p>同請求第二次呼叫(在View裡面注入) View Inject Scoped Counter = @ViewInjectScopedCounter.GetCounter()</p>
+    </div>
+</div>
+
+<div class="card">
+    <h5 class="card-header">Transient</h5>
+    <div class="card-body">
+        <h6>每次呼叫都是重新產生新的實例</h6>
+        <p>同請求第一次呼叫(在controller內注入) Transient Counter = @ViewBag.TransientCount</p>
+        <p>同請求第二次呼叫(在View裡面注入) View Inject Transient Counter = @ViewInjectTransientCounter.GetCounter()</p>
+    </div>
+</div>
+<br />
+
+<a class="btn btn-primary" href="@Url.Action("CounterPlusOne", "Home")">再次呼叫請求</a>
+<a class="btn btn-primary" href="@Url.Action("Index", "Home")">回首頁</a>

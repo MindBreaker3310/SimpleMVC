@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using SimpleMVC.Models;
 
-namespace SimpleMVC.Models
+namespace SimpleMVC.Repositories
 {
     //測試資料
-    public class ProductsData
+    public class ProductsRepository
     {
         private List<Product> _Products = new List<Product>()
         {

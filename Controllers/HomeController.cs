@@ -7,23 +7,49 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using SimpleMVC.Models;
+using SimpleMVC.Repositories;
+using SimpleMVC.Services;
 
 namespace SimpleMVC.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        //狀態管理
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private ProductsData _data;
+        //Tag Helper
+        private ProductsRepository _productsRepository;
+        //DI生命週期
+        private readonly ISingletonCounter _singletonCounter;
+        private readonly IScopedCounter _scopedCounter;
+        private readonly ITransientCounter _transientCounter;
+        //config & log
+        private readonly IConfiguration _configuration;
+        private readonly IOptions<MyConfigOptions> _options;
+        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor, ProductsData pData)
+
+        public HomeController(ILogger<HomeController> logger,
+            IHttpContextAccessor httpContextAccessor,
+            ProductsRepository productsRepository,
+            ISingletonCounter singletonCounter,
+            IScopedCounter scopedCounter,
+            ITransientCounter transientCounter,
+            IConfiguration configuration,
+            IOptions<MyConfigOptions> options)
         {
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
-            _data = pData;
+            _productsRepository = productsRepository;
+            _singletonCounter = singletonCounter;
+            _scopedCounter = scopedCounter;
+            _transientCounter = transientCounter;
+            _configuration = configuration;
+            _options = options;
         }
 
         public IActionResult Index()
@@ -156,17 +182,17 @@ namespace SimpleMVC.Controllers
         [Route("Home/ShowAllProducts", Name = "ShowAll")]
         public IActionResult ShowAllProducts()
         {
-            return View(_data.Products);
+            return View(_productsRepository.Products);
         }
 
         public IActionResult ProductDetail(int id)
         {
-            return View(_data.Products.FirstOrDefault(x => x.ProductId == id));
+            return View(_productsRepository.Products.FirstOrDefault(x => x.ProductId == id));
         }
 
         public IActionResult ProductCreate()
         {
-            ViewBag.newId = _data.Products.Max(x => x.ProductId) + 1;
+            ViewBag.newId = _productsRepository.Products.Max(x => x.ProductId) + 1;
             return View();
         }
 
@@ -178,19 +204,19 @@ namespace SimpleMVC.Controllers
             //模型都符合data annotation
             if (ModelState.IsValid)
             {
-                _data.Add(product);
+                _productsRepository.Add(product);
                 return Redirect("ShowAllProducts");
             }
             else
             {
-                ViewBag.newId = _data.Products.Max(x => x.ProductId) + 1;
+                ViewBag.newId = _productsRepository.Products.Max(x => x.ProductId) + 1;
                 return View();
             }
         }
 
         public IActionResult ProductEdit(int id)
         {
-            return View(_data.Products.FirstOrDefault(x => x.ProductId == id));
+            return View(_productsRepository.Products.FirstOrDefault(x => x.ProductId == id));
         }
 
         [HttpPost]
@@ -199,20 +225,59 @@ namespace SimpleMVC.Controllers
             //模型都符合data annotation
             if (ModelState.IsValid)
             {
-                _data.Update(product);
-                return View("ShowAllProducts", _data.Products);
+                _productsRepository.Update(product);
+                return View("ShowAllProducts", _productsRepository.Products);
             }
-            return View(_data.Products.FirstOrDefault(x => x.ProductId == product.ProductId));
+            return View(_productsRepository.Products.FirstOrDefault(x => x.ProductId == product.ProductId));
         }
 
         public IActionResult ProductDelete(int id)
         {
-            _data.Delete(id);
-            return View("ShowAllProducts", _data.Products);
+            _productsRepository.Delete(id);
+            return View("ShowAllProducts", _productsRepository.Products);
         }
+        #endregion
+
+        #region 依賴注入
+        public IActionResult CounterPlusOne()
+        {
+            ViewBag.SingletonCount = _singletonCounter.GetCounter();
+            ViewBag.ScopedCount = _scopedCounter.GetCounter();
+            ViewBag.TransientCount = _transientCounter.GetCounter();
+
+            return View("VisitCounter");
+        }
+        #endregion
+
+        #region Config檔與Log記錄
+        public IActionResult ConfigAndLog()
+        {
+            ViewBag.LogInfo = _configuration["Logging:LogLevel:Default"];
+
+            ViewBag.MySetting1 = _options.Value.MySetting1;
+            ViewBag.MySetting2 = _options.Value.MySetting2;
+            ViewBag.MySetting3 = _options.Value.MySetting3;
+
+            _logger.LogTrace("我是Trace");
+            _logger.LogDebug("我是Debug");
+            _logger.LogInformation("我是Information");
+            _logger.LogWarning("我是Warning");
+            _logger.LogError("我是Error");
+            _logger.LogCritical("我是Critical");
+
+            return View();
+        }
+        #endregion
+
+        #region 過濾器
+        //[MyCustomFilter]
+        //public IActionResult UseFilter()
+        //{
+            
+
+        //    return View();
+        //}
+        #endregion
     }
-
-
-    #endregion
 }
 

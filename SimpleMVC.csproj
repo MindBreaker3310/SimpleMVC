@@ -10,12 +10,16 @@
     <None Remove="TagHelpers\" />
     <None Remove="Views\Home\TagHelper\" />
     <None Remove="Validations\" />
+    <None Remove="Repositories\" />
+    <None Remove="Services\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Middlewares\" />
     <Folder Include="TagHelpers\" />
     <Folder Include="Views\Home\TagHelper\" />
     <Folder Include="Validations\" />
+    <Folder Include="Repositories\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />

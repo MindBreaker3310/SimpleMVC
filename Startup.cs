@@ -12,7 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SimpleMVC.Middlewares;
-using SimpleMVC.Models;
+using SimpleMVC.Repositories;
+using SimpleMVC.Services;
 
 namespace SimpleMVC
 {
@@ -43,16 +44,23 @@ namespace SimpleMVC
                 options.Cookie.IsEssential = true;//可以從用cookie把session回復起來
             });
 
-            //新增Views Shared資料夾範圍
+            //新增Views搜尋資料夾範圍
             services.Configure<RazorViewEngineOptions>(o =>
             {
                 o.ViewLocationFormats.Add("~/Views/MyCustomShared/{0}" + RazorViewEngine.ViewExtension);
                 o.ViewLocationFormats.Add("~/Views/Home/TagHelper/{0}" + RazorViewEngine.ViewExtension);
             });
 
-
             //測試資料
-            services.AddSingleton<ProductsData>();
+            services.AddSingleton<ProductsRepository>();
+
+            //DI不同的生命週期
+            services.AddSingleton<ISingletonCounter, SingletonCounter>();
+            services.AddScoped<IScopedCounter, ScopedCounter>();
+            services.AddTransient<ITransientCounter, TransientCounter>();
+
+            //config使用option pattern
+            services.Configure<MyConfigOptions>(Configuration.GetSection("MyConfig"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -121,7 +129,8 @@ namespace SimpleMVC
 
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller}/{action}/{id?}");
+                //pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
