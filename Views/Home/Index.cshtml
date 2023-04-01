@@ -3,7 +3,7 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">里程碑</h1>
+    <h1 class="display-4">MVC Core 基礎</h1>
 
     <div class="card">
         <h5 class="card-header">Section Script</h5>
@@ -91,18 +91,14 @@
     </div>
 
     <div class="card">
-        <h5 class="card-header">過濾器</h5>
+        <h5 class="card-header">過濾器、DI過濾器、例外處理過濾器</h5>
         <div class="card-body">
             <div class="list-group">
-                <a class="list-group-item list-group-item-action" href="@Url.Action("UseTempData", "Home")">UseTempData</a>
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        <h5 class="card-header">例外處理</h5>
-        <div class="card-body">
-            <div class="list-group">
-                <a class="list-group-item list-group-item-action" href="@Url.Action("UseTempData", "Home")">UseTempData</a>
+                <a class="list-group-item list-group-item-action" href="@Url.Action("UseFilter", "Home")">使用過濾器(分鐘數為偶數會回傳403Forbidden)</a>
+                <a class="list-group-item list-group-item-action" href="@Url.Action("UseAsyncFilter", "Home")">使用Async過濾器(分鐘數為偶數會回傳403Forbidden)</a>
+                <a class="list-group-item list-group-item-action" href="@Url.Action("UseAsyncAndNonAsyncFilter", "Home")">使用過濾器與Async過濾器(分鐘數為偶數會回傳403Forbidden)</a>
+                <a class="list-group-item list-group-item-action" href="@Url.Action("UseMyCustomDIFilter", "Home")">使用DI過濾器與Async過濾器(分鐘數為偶數會回傳403Forbidden)</a>
+                <a class="list-group-item list-group-item-action" href="@Url.Action("UseMyCustomExceptionFilter", "Home")">使用例外處理過濾器</a>
             </div>
         </div>
     </div>

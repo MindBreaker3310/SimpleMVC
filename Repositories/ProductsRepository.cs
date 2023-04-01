@@ -72,7 +72,7 @@ namespace SimpleMVC.Repositories
                 _Products.Add(product);
                 return true;
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }
@@ -96,7 +96,7 @@ namespace SimpleMVC.Repositories
                 }
                 return false;
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }

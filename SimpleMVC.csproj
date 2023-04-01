@@ -12,6 +12,7 @@
     <None Remove="Validations\" />
     <None Remove="Repositories\" />
     <None Remove="Services\" />
+    <None Remove="Filters\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Middlewares\" />
@@ -20,6 +21,7 @@
     <Folder Include="Validations\" />
     <Folder Include="Repositories\" />
     <Folder Include="Services\" />
+    <Folder Include="Filters\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />

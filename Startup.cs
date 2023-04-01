@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SimpleMVC.Filters;
 using SimpleMVC.Middlewares;
 using SimpleMVC.Repositories;
 using SimpleMVC.Services;
@@ -61,6 +62,10 @@ namespace SimpleMVC
 
             //config使用option pattern
             services.Configure<MyConfigOptions>(Configuration.GetSection("MyConfig"));
+
+            //註冊過濾器
+            services.AddScoped<MyCustomDIFilter>();
+            services.AddScoped<MyCustomExceptionFilter>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

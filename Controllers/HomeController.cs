@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
+using SimpleMVC.Filters;
 using SimpleMVC.Models;
 using SimpleMVC.Repositories;
 using SimpleMVC.Services;
@@ -31,7 +32,7 @@ namespace SimpleMVC.Controllers
         private readonly IConfiguration _configuration;
         private readonly IOptions<MyConfigOptions> _options;
         private readonly ILogger<HomeController> _logger;
-
+        //DI過濾器
 
         public HomeController(ILogger<HomeController> logger,
             IHttpContextAccessor httpContextAccessor,
@@ -270,13 +271,43 @@ namespace SimpleMVC.Controllers
         #endregion
 
         #region 過濾器
-        //[MyCustomFilter]
-        //public IActionResult UseFilter()
-        //{
-            
+        [MyCustomFilter]//可以放action上，也可以放在controller上
+        public IActionResult UseFilter()
+        {
+            _httpContextAccessor.HttpContext.Response.WriteAsync("<br />--------- View --------- <br />");
+            return Content("");
+        }
 
-        //    return View();
-        //}
+        [MyAsyncCustomFilter]
+        public IActionResult UseAsyncFilter()
+        {
+            _httpContextAccessor.HttpContext.Response.WriteAsync("<br />--------- View --------- <br />");
+            return Content("");
+        }
+
+        [MyCustomFilter]
+        [MyAsyncCustomFilter]
+        public IActionResult UseAsyncAndNonAsyncFilter()
+        {
+            _httpContextAccessor.HttpContext.Response.WriteAsync("<br />--------- View --------- <br />");
+            return Content("");
+        }
+
+        [ServiceFilter(typeof(MyCustomDIFilter))]
+        public IActionResult UseMyCustomDIFilter()
+        {
+            _httpContextAccessor.HttpContext.Response.WriteAsync("<br />--------- View --------- <br />");
+            return Content("");
+        }
+
+        [ServiceFilter(typeof(MyCustomExceptionFilter))]
+        public IActionResult UseMyCustomExceptionFilter()
+        {
+            int one = 1;
+            int zero = 0;
+            int bad = one / zero;//會報錯
+            return Content("");
+        }
         #endregion
     }
 }
