@@ -103,6 +103,25 @@
         </div>
     </div>
 
+    <div class="card">
+        <h5 class="card-header">Identity Server 4</h5>
+        <div class="card-body">
+            <div class="list-group">
+                <p id="GetJWT" class="list-group-item list-group-item-action" >使用過濾器(分鐘數為偶數會回傳403Forbidden)</p>
+
+            </div>
+        </div>
+    </div>
+
 </div>
 
-
+@section Scripts{
+    <script>
+        $("#GetJWT").click(function () {
+            $.post("/Magic/Snail")
+                .done(function (res) {
+                    $("ul").append("<li>" + res + "</li>");
+                });
+        });
+    </script>
+}

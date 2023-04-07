@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -66,6 +67,24 @@ namespace SimpleMVC
             //註冊過濾器
             services.AddScoped<MyCustomDIFilter>();
             services.AddScoped<MyCustomExceptionFilter>();
+
+
+            //註冊identity server服務
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                .AddJwtBearer(IdentityServerAuthenticationDefaults.AuthenticationScheme, options =>
+                {
+                    //identity server的位置
+                    options.Authority = Configuration.GetValue<string>("IdentityServerHost");
+                    options.RequireHttpsMetadata = false;
+                    // 此時產生的Token還未有aud資料，若沒設定ValidateAudience = false，則call API會回傳401
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                    {
+                        ValidateAudience = false
+                    };
+                });
+
+            //呼叫外部url用
+            services.AddHttpClient();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,11 +101,14 @@ namespace SimpleMVC
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
 
             app.UseRouting();
+
+            // 啟用identity Server 4驗證
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
@@ -122,9 +144,6 @@ namespace SimpleMVC
                 });
             });
 
-
-
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async (context) =>
@@ -137,6 +156,8 @@ namespace SimpleMVC
                     pattern: "{controller}/{action}/{id?}");
                 //pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+
         }
     }
 }

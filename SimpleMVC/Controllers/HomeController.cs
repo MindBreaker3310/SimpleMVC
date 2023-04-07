@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
@@ -32,7 +35,8 @@ namespace SimpleMVC.Controllers
         private readonly IConfiguration _configuration;
         private readonly IOptions<MyConfigOptions> _options;
         private readonly ILogger<HomeController> _logger;
-        //DI過濾器
+        //呼叫外部url用
+        private readonly IHttpClientFactory _httpClientFactory;
 
         public HomeController(ILogger<HomeController> logger,
             IHttpContextAccessor httpContextAccessor,
@@ -41,7 +45,8 @@ namespace SimpleMVC.Controllers
             IScopedCounter scopedCounter,
             ITransientCounter transientCounter,
             IConfiguration configuration,
-            IOptions<MyConfigOptions> options)
+            IOptions<MyConfigOptions> options,
+            IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
@@ -51,6 +56,7 @@ namespace SimpleMVC.Controllers
             _transientCounter = transientCounter;
             _configuration = configuration;
             _options = options;
+            _httpClientFactory = httpClientFactory;
         }
 
         public IActionResult Index()
@@ -307,6 +313,37 @@ namespace SimpleMVC.Controllers
             int zero = 0;
             int bad = one / zero;//會報錯
             return Content("");
+        }
+        #endregion
+
+        #region identity Server 4驗證
+
+        [Authorize(Roles = "admin")]
+        public IActionResult AdminGet()
+        {
+            return Content("Yes, only Admin can accrss this API");
+        }
+
+        [Authorize(Roles = "user")]
+        public IActionResult UserGet()
+        {
+            return Content("Yes, user can accrss this API");
+        }
+
+
+        public async Task<IActionResult> IdentityServerConfig()
+        {
+            // 建立 HttpClient 實例
+            var httpClient = _httpClientFactory.CreateClient();
+
+            // 發送 GET 請求
+            var response = await httpClient.GetAsync(_configuration["IdentityServerConfigUrl"]);
+
+            // 讀取回應內容
+            var content = await response.Content.ReadAsStringAsync();
+
+            // 回傳回應內容
+            return Content(content, "text/json");
         }
         #endregion
     }
