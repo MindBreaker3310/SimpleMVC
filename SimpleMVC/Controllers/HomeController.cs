@@ -318,6 +318,76 @@ namespace SimpleMVC.Controllers
 
         #region identity Server 4驗證
 
+        public async Task<IActionResult> IdentityServerConfig()
+        {
+            var httpClient = _httpClientFactory.CreateClient();
+            var response = await httpClient.GetAsync(_configuration["IdentityServerConfigUrl"]);
+            var content = await response.Content.ReadAsStringAsync();
+            return Content(content, "text/json");
+        }
+
+        public async Task<IActionResult> IdentityServerUserToken()
+        {
+            var httpClient = _httpClientFactory.CreateClient();
+
+            //建立x-www-form-unlencoded物件
+            var postData = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("client_id", "User"),
+                new KeyValuePair<string, string>("client_secret", "userSecret"),
+                new KeyValuePair<string, string>("grant_type", "client_credentials")
+            };
+            var payload = new FormUrlEncodedContent(postData);
+
+            var response = await httpClient.PostAsync(_configuration["IdentityServerTokenUrl"], payload);
+            var content = await response.Content.ReadAsStringAsync();
+
+            var json = JObject.Parse(content);
+            var accessToken = json["access_token"].ToString();
+
+            //存放cookie
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete("MyAccessTokenCookie");
+
+            CookieOptions options = new CookieOptions()
+            {
+                Expires = DateTime.Now.AddMinutes(7)
+            };
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("MyAccessTokenCookie", accessToken);
+
+            return Content(content, "text/json");
+        }
+
+        public async Task<IActionResult> IdentityServerAdminToken()
+        {
+            var httpClient = _httpClientFactory.CreateClient();
+
+            //建立x-www-form-unlencoded物件
+            var postData = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("client_id", "Admin"),
+                new KeyValuePair<string, string>("client_secret", "adminSecret"),
+                new KeyValuePair<string, string>("grant_type", "client_credentials")
+            };
+            var payload = new FormUrlEncodedContent(postData);
+
+            var response = await httpClient.PostAsync(_configuration["IdentityServerTokenUrl"], payload);
+            var content = await response.Content.ReadAsStringAsync();
+
+            var json = JObject.Parse(content);
+            var accessToken = json["access_token"].ToString();
+
+            //存放cookie
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete("MyAccessTokenCookie");
+
+            CookieOptions options = new CookieOptions()
+            {
+                Expires = DateTime.Now.AddMinutes(7)
+            };
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("MyAccessTokenCookie", accessToken);
+
+            return Content(content, "text/json");
+        }
+
         [Authorize(Roles = "admin")]
         public IActionResult AdminGet()
         {
@@ -328,22 +398,6 @@ namespace SimpleMVC.Controllers
         public IActionResult UserGet()
         {
             return Content("Yes, user can accrss this API");
-        }
-
-
-        public async Task<IActionResult> IdentityServerConfig()
-        {
-            // 建立 HttpClient 實例
-            var httpClient = _httpClientFactory.CreateClient();
-
-            // 發送 GET 請求
-            var response = await httpClient.GetAsync(_configuration["IdentityServerConfigUrl"]);
-
-            // 讀取回應內容
-            var content = await response.Content.ReadAsStringAsync();
-
-            // 回傳回應內容
-            return Content(content, "text/json");
         }
         #endregion
     }

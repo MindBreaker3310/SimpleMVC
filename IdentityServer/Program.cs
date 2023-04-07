@@ -8,18 +8,16 @@ namespace IdentityServer
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddIdentityServer()
-                // 方便測試選擇in-memory
-                .AddInMemoryClients(IdentityServerConfig.GetClients())
+            builder.Services.AddIdentityServer()   
+                .AddInMemoryClients(IdentityServerConfig.GetClients())// 方便測試選擇in-memory
                 .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())
                 .AddInMemoryApiScopes(IdentityServerConfig.GetApiScopes())
-                // 方便開發階段於啟動時產生暫時密鑰(tempkey.jwk)
-                .AddDeveloperSigningCredential();
+                .AddDeveloperSigningCredential();// 方便開發階段於啟動時產生暫時密鑰(tempkey.jwk)
 
-            builder.Services.AddAuthentication("MyCookie")
-                .AddCookie("MyCookie", options =>
+            builder.Services.AddAuthentication("access_token")
+                .AddCookie("access_token", options =>
                 {
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                 });
 
             var app = builder.Build();

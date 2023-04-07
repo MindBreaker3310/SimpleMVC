@@ -107,21 +107,85 @@
         <h5 class="card-header">Identity Server 4</h5>
         <div class="card-body">
             <div class="list-group">
-                <p id="GetJWT" class="list-group-item list-group-item-action" >使用過濾器(分鐘數為偶數會回傳403Forbidden)</p>
+                <a class="list-group-item list-group-item-action" href="@Url.Action("IdentityServerConfig", "Home")">呼叫identity server 4 取得config設定</a>
+                <a class="list-group-item list-group-item-action" href="@Url.Action("IdentityServerAdminToken", "Home")">呼叫identity server 4 取得Admin access token</a>
+                <a class="list-group-item list-group-item-action" href="@Url.Action("IdentityServerUserToken", "Home")">呼叫identity server 4 取得User access token</a>
+                <button class="list-group-item list-group-item-action" id="AdminGet">Admin Get</button>
+                <button class="list-group-item list-group-item-action" id="AdminGet">User Get</button>
 
             </div>
+            <div class="IdSMessage"></div>
         </div>
     </div>
 
 </div>
 
 @section Scripts{
-    <script>
-        $("#GetJWT").click(function () {
-            $.post("/Magic/Snail")
-                .done(function (res) {
-                    $("ul").append("<li>" + res + "</li>");
-                });
+    <script>$("#AdminGet").click(function () {
+            // 在頁面載入時，從 cookie 中獲取 access_token
+            // 從 cookie 中獲取 access_token
+            var cookies = document.cookie.split("; ");
+            for (var i = 0; i < cookies.length; i++) {
+                var parts = cookies[i].split("=");
+                if (parts[0] === "MyAccessTokenCookie") {
+                    var accessToken = parts[1];
+                    break;
+                }
+            }
+
+            // 檢查 access_token 是否存在
+            if (!accessToken) {
+                alert("無Token");
+                return;
+            }
+
+            // 在發送 AJAX 請求時，將 access_token 附加到 header 中
+            $.ajax({
+                url: "/home/AdminGet",
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`
+                },
+                success: function (response) {
+                    // 處理響應
+                    alert(response);
+                },
+                error: function (xhr) {
+                    alert(xhr);
+                }
+            });
         });
-    </script>
+        $("#UserGet").click(function () {
+            // 在頁面載入時，從 cookie 中獲取 access_token
+            // 從 cookie 中獲取 access_token
+            var cookies = document.cookie.split("; ");
+            for (var i = 0; i < cookies.length; i++) {
+                var parts = cookies[i].split("=");
+                if (parts[0] === "MyAccessTokenCookie") {
+                    var accessToken = parts[1];
+                    break;
+                }
+            }
+
+            // 檢查 access_token 是否存在
+            if (!accessToken) {
+                alert("無Token");
+                return;
+            }
+
+            // 在發送 AJAX 請求時，將 access_token 附加到 header 中
+            $.ajax({
+                url: "/home/UserGet",
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`
+                },
+                success: function (response) {
+                    // 處理響應
+                    alert(response);
+                },
+                error: function (xhr) {
+                    // 處理錯誤
+                    alert(xhr);
+                }
+            });
+        });</script>
 }
